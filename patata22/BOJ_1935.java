@@ -36,6 +36,7 @@ public class BOJ_1935 {
 
 
 
+
     }
 
 }
