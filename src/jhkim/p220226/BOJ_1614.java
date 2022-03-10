@@ -2,7 +2,7 @@ package jhkim.p220226;
 
 import java.util.Scanner;
 
-public class B1614 {
+public class BOJ_1614 {
 
 	public static void main(String[] args) {
 
