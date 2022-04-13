@@ -1,19 +1,20 @@
 package jhkim.p220330;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class SWEA_3124_Prim_PQ {
+public class SWEA_3124_Kruskal {
 
     static class Node implements Comparable<Node> {
 
-        int val;
+        int from;
+        int to;
         int dis;
 
-        public Node(int val, int dis) {
-            this.val = val;
+        public Node(int from, int to, int dis) {
+            this.from = from;
+            this.to = to;
             this.dis = dis;
         }
 
@@ -25,18 +26,37 @@ public class SWEA_3124_Prim_PQ {
         }
     }
 
+    static int T, V, E, A, B, C, count;
+    static int parents[];
+    static Node[] nodeList;
+    static long result;
+
+    public static void makeSet() {
+        parents = new int[V];
+        for(int i = 0; i < V; i++) {
+            parents[i] = i;
+        }
+    }
+
+    public static int findSet(int a) {
+        if(a == parents[a]) return a;
+        return parents[a] = findSet(parents[a]);
+    }
+
+    public static boolean union(int a, int b) {
+        int aRoot = findSet(a);
+        int bRoot = findSet(b);
+        if(aRoot == bRoot) return false;
+        parents[bRoot] = aRoot;
+        return true;
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        PriorityQueue<Node> pq;
-        ArrayList<ArrayList<Node>> list;
-        int T = Integer.parseInt(br.readLine());
-        int V, E, A, B, C;
-        boolean[] visited;
-        long result;
-        int count;
+        T = Integer.parseInt(br.readLine());
 
         for (int tc = 1; tc <= T; tc++) {
 
@@ -44,17 +64,8 @@ public class SWEA_3124_Prim_PQ {
 
             V = Integer.parseInt(st.nextToken());
             E = Integer.parseInt(st.nextToken());
-
-            pq = new PriorityQueue<>();
-            list = new ArrayList<>();
-            visited = new boolean[V];
-
-            count = 0;
+            nodeList = new Node[E];
             result = 0;
-
-            for(int i = 0; i < V; i++) {
-                list.add(new ArrayList<>());
-            }
 
             for (int i = 0; i < E; i++) {
                 st = new StringTokenizer(br.readLine());
@@ -62,25 +73,19 @@ public class SWEA_3124_Prim_PQ {
                 B = Integer.parseInt(st.nextToken()) - 1;
                 C = Integer.parseInt(st.nextToken());
 
-                list.get(A).add(new Node(B, C));
-                list.get(B).add(new Node(A, C));
+                nodeList[i] = new Node(A, B, C);
             }
-            pq.add(new Node(0, 0));
 
-            while(!pq.isEmpty()) {
-                Node n = pq.poll();
+            Arrays.sort(nodeList);
+            makeSet();
 
-                if(visited[n.val]) continue;
-                visited[n.val] = true;
+            count = 0;
 
-                result += n.dis;
-
-                for (Node no : list.get(n.val)) {
-                    if(!visited[no.val]) {
-                        pq.add(no);
-                    }
+            for (Node n: nodeList) {
+                if(union(n.from, n.to)) {
+                    result += n.dis;
+                    if(++count == V - 1) break;
                 }
-                if(++count == V) break;
             }
             bw.write("#" + tc + " " + result + "\n");
         }
