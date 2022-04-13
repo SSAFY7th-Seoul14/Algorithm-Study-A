@@ -30,7 +30,8 @@ public class BOJ_1504 {
             if (current == end) break;
 
             for (int j = 0; j < N; j++) {
-                if (!visited[j] && matrix[current][j] != 0 && distance[j] > distance[current] + matrix[current][j]) {
+                if (!visited[j] && matrix[current][j] != 0 &&
+                        distance[j] > distance[current] + matrix[current][j]) {
                     distance[j] = distance[current] + matrix[current][j];
                 }
             }
@@ -82,11 +83,11 @@ public class BOJ_1504 {
             }
         }
 
-        //1 - 1. 1-must1 Dijkstra
+        //2 - 1. 1-must2 Dijkstra
         min2 += dijkstra(0, must2);
         if (min2 > 200000000) min2 = -1;
         else {
-            //1 - 2. must1-must2 Dijkstra
+            //2 - 2. must2-must1 Dijkstra
             min2 += dijkstra(must2, must1);
             if (min2 > 200000000) min2 = -1;
             else {
